@@ -1,0 +1,30 @@
+{
+  "name": "db-admin",
+  "policies": [
+    {
+      "name": "DBAdminPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "db:Select",
+          "resource": "db/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "db:Insert",
+          "resource": "db/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "db:Update",
+          "resource": "db/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "db:Delete",
+          "resource": "db/*"
+        }
+      ]
+    }
+  ]
+}

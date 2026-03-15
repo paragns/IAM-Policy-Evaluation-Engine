@@ -1,0 +1,16 @@
+{
+  "username": "charlie",
+  "roles": ["db-admin"],
+  "policies": [
+    {
+      "name": "DenyProdDelete",
+      "statements": [
+        {
+          "effect": "Deny",
+          "action": "db:Delete",
+          "resource": "db/prod/*"
+        }
+      ]
+    }
+  ]
+}

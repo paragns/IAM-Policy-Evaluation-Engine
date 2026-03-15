@@ -1,0 +1,20 @@
+{
+  "name": "ec2-reader",
+  "policies": [
+    {
+      "name": "EC2ReadPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "ec2:DescribeInstances",
+          "resource": "ec2/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "ec2:DescribeSecurityGroups",
+          "resource": "ec2/*"
+        }
+      ]
+    }
+  ]
+}

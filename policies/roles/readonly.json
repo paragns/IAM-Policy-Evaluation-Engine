@@ -1,0 +1,30 @@
+{
+  "name": "readonly",
+  "policies": [
+    {
+      "name": "ReadOnlyPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "s3:GetObject",
+          "resource": "*"
+        },
+        {
+          "effect": "Allow",
+          "action": "ec2:DescribeInstances",
+          "resource": "*"
+        },
+        {
+          "effect": "Allow",
+          "action": "db:Select",
+          "resource": "*"
+        },
+        {
+          "effect": "Allow",
+          "action": "logs:GetLogEvents",
+          "resource": "*"
+        }
+      ]
+    }
+  ]
+}

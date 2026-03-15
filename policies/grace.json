@@ -1,0 +1,16 @@
+{
+  "username": "grace",
+  "roles": ["network-admin"],
+  "policies": [
+    {
+      "name": "DenyVpcDelete",
+      "statements": [
+        {
+          "effect": "Deny",
+          "action": "vpc:DeleteVpc",
+          "resource": "vpc/prod/*"
+        }
+      ]
+    }
+  ]
+}

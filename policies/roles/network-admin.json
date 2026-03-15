@@ -1,0 +1,25 @@
+{
+  "name": "network-admin",
+  "policies": [
+    {
+      "name": "NetworkAdminPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "vpc:CreateVpc",
+          "resource": "vpc/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "vpc:DeleteVpc",
+          "resource": "vpc/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "vpc:ModifyVpc",
+          "resource": "vpc/*"
+        }
+      ]
+    }
+  ]
+}

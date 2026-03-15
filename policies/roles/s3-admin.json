@@ -1,0 +1,25 @@
+{
+  "name": "s3-admin",
+  "policies": [
+    {
+      "name": "S3AdminPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "s3:GetObject",
+          "resource": "*"
+        },
+        {
+          "effect": "Allow",
+          "action": "s3:PutObject",
+          "resource": "*"
+        },
+        {
+          "effect": "Allow",
+          "action": "s3:DeleteObject",
+          "resource": "*"
+        }
+      ]
+    }
+  ]
+}

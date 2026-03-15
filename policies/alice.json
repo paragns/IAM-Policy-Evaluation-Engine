@@ -1,0 +1,5 @@
+{
+  "username": "alice",
+  "roles": ["s3-admin"],
+  "policies": []
+}

@@ -1,0 +1,20 @@
+{
+  "name": "billing-reader",
+  "policies": [
+    {
+      "name": "BillingReadPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "billing:GetInvoice",
+          "resource": "billing/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "billing:GetUsageReport",
+          "resource": "billing/*"
+        }
+      ]
+    }
+  ]
+}

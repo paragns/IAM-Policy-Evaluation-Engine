@@ -1,0 +1,5 @@
+{
+  "username": "bob",
+  "roles": ["s3-reader", "ec2-reader"],
+  "policies": []
+}

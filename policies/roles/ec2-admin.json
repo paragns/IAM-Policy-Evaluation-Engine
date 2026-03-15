@@ -1,0 +1,30 @@
+{
+  "name": "ec2-admin",
+  "policies": [
+    {
+      "name": "EC2AdminPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "ec2:StartInstance",
+          "resource": "ec2/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "ec2:StopInstance",
+          "resource": "ec2/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "ec2:TerminateInstance",
+          "resource": "ec2/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "ec2:DescribeInstances",
+          "resource": "ec2/*"
+        }
+      ]
+    }
+  ]
+}

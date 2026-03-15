@@ -1,0 +1,20 @@
+{
+  "name": "db-reader",
+  "policies": [
+    {
+      "name": "DBReadPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "db:Select",
+          "resource": "db/prod/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "db:Select",
+          "resource": "db/staging/*"
+        }
+      ]
+    }
+  ]
+}

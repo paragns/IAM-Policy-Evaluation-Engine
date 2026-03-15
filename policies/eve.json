@@ -1,0 +1,16 @@
+{
+  "username": "eve",
+  "roles": ["ec2-admin"],
+  "policies": [
+    {
+      "name": "DenyTerminate",
+      "statements": [
+        {
+          "effect": "Deny",
+          "action": "ec2:TerminateInstance",
+          "resource": "ec2/*"
+        }
+      ]
+    }
+  ]
+}

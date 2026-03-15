@@ -1,0 +1,16 @@
+{
+  "username": "ivy",
+  "roles": ["readonly"],
+  "policies": [
+    {
+      "name": "DenySensitiveLogs",
+      "statements": [
+        {
+          "effect": "Deny",
+          "action": "logs:GetLogEvents",
+          "resource": "logs/prod/*"
+        }
+      ]
+    }
+  ]
+}

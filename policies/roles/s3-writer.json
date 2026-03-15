@@ -1,0 +1,20 @@
+{
+  "name": "s3-writer",
+  "policies": [
+    {
+      "name": "S3WritePolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "s3:PutObject",
+          "resource": "bucket1/*"
+        },
+        {
+          "effect": "Allow",
+          "action": "s3:PutObject",
+          "resource": "bucket2/*"
+        }
+      ]
+    }
+  ]
+}

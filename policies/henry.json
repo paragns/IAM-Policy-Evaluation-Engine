@@ -1,0 +1,5 @@
+{
+  "username": "henry",
+  "roles": ["db-reader", "logs-reader"],
+  "policies": []
+}

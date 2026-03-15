@@ -1,0 +1,5 @@
+{
+  "username": "diana",
+  "roles": ["readonly", "billing-reader"],
+  "policies": []
+}

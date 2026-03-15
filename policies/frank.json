@@ -1,0 +1,5 @@
+{
+  "username": "frank",
+  "roles": ["s3-writer", "logs-reader"],
+  "policies": []
+}

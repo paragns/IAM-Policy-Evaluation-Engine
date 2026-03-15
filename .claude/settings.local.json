@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(wsl g++ -std=c++17 -Iinclude -Ithird_party src/main.cpp src/PolicyLoader.cpp src/PolicyEngine.cpp src/ResourceMatcher.cpp src/RoleManager.cpp src/UserManager.cpp -o iam_engine)",
-      "Bash(wsl ./iam_engine)"
-    ]
-  }
-}
