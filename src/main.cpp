@@ -1,41 +1,53 @@
 #include <iostream>
+#include <filesystem>
 #include "UserManager.h"
 #include "RoleManager.h"
 #include "PolicyEngine.h"
 
-void printDecision(const std::string& action, const std::string& resource, Decision decision) {
-    std::cout << "evaluate(\"" << action << "\", \"" << resource << "\") → "
-              << (decision == Decision::Allow ? "ALLOW" : "DENY") << "\n";
+namespace fs = std::filesystem;
+
+void loadAll(UserManager& userManager, RoleManager& roleManager) {
+    // Load all roles first
+    for (const auto& entry : fs::directory_iterator("policies/roles")) {
+        if (entry.path().extension() == ".json") {
+            roleManager.loadRole(entry.path().string());
+        }
+    }
+
+    // Load all users
+    for (const auto& entry : fs::directory_iterator("policies")) {
+        if (fs::is_regular_file(entry) && entry.path().extension() == ".json") {
+            userManager.loadUser(entry.path().string());
+        }
+    }
 }
 
-int main() {
-    // Phase 1 — register all roles and users
-    RoleManager roleManager;
-    roleManager.loadRole("policies/roles/s3-reader.json");
-
-    UserManager userManager;
-    userManager.loadUser("policies/demo-user.json");
-
-    PolicyEngine engine(roleManager);
-
-    // Phase 2 — process the query
-    const User* user = userManager.getUser("demo-user");
-    if (!user) {
-        std::cerr << "User not found\n";
+int main(int argc, char* argv[]) {
+    if (argc != 5 || std::string(argv[1]) != "evaluate") {
+        std::cerr << "Usage: iam_engine evaluate <username> <action> <resource>\n";
         return 1;
     }
 
-    // ALLOW — inherited from s3-reader role
-    printDecision("s3:GetObject", "bucket1/file.txt",
-        engine.evaluate(*user, "s3:GetObject", "bucket1/file.txt"));
+    std::string username = argv[2];
+    std::string action   = argv[3];
+    std::string resource = argv[4];
 
-    // DENY — explicitly denied in user's own policy
-    printDecision("s3:DeleteObject", "bucket1/file.txt",
-        engine.evaluate(*user, "s3:DeleteObject", "bucket1/file.txt"));
+    // Phase 1 — load all users and roles from policies/ folder
+    UserManager userManager;
+    RoleManager roleManager;
+    loadAll(userManager, roleManager);
 
-    // DENY — no policy covers this action
-    printDecision("s3:PutObject", "bucket1/file.txt",
-        engine.evaluate(*user, "s3:PutObject", "bucket1/file.txt"));
+    // Phase 2 — evaluate the query
+    const User* user = userManager.getUser(username);
+    if (!user) {
+        std::cerr << "User not found: " << username << "\n";
+        return 1;
+    }
+
+    PolicyEngine engine(roleManager);
+    Decision decision = engine.evaluate(*user, action, resource);
+
+    std::cout << (decision == Decision::Allow ? "ALLOW" : "DENY") << "\n";
 
     return 0;
 }
