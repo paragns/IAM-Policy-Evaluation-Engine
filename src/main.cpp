@@ -1,21 +1,29 @@
 #include <iostream>
 #include "PolicyLoader.h"
+#include "PolicyEngine.h"
+
+void printDecision(const std::string& action, const std::string& resource, Decision decision) {
+    std::cout << "evaluate(\"" << action << "\", \"" << resource << "\") → "
+              << (decision == Decision::Allow ? "ALLOW" : "DENY") << "\n";
+}
 
 int main() {
     PolicyLoader loader;
     User user = loader.loadUser("policies/demo-user.json");
 
-    std::cout << "User: " << user.username << "\n";
+    PolicyEngine engine;
 
-    for (const auto& policy : user.policies) {
-        std::cout << "Policy: " << policy.name << "\n";
-        for (const auto& stmt : policy.statements) {
-            std::cout << "  Statement:\n";
-            std::cout << "    Effect:   " << (stmt.effect == Effect::Allow ? "Allow" : "Deny") << "\n";
-            std::cout << "    Action:   " << stmt.action << "\n";
-            std::cout << "    Resource: " << stmt.resource << "\n";
-        }
-    }
+    // Should be ALLOW — matches the Allow statement
+    printDecision("s3:GetObject", "bucket1/file.txt",
+        engine.evaluate(user, "s3:GetObject", "bucket1/file.txt"));
+
+    // Should be DENY — matches the Deny statement
+    printDecision("s3:DeleteObject", "bucket1/file.txt",
+        engine.evaluate(user, "s3:DeleteObject", "bucket1/file.txt"));
+
+    // Should be DENY — no matching statement at all (default deny)
+    printDecision("s3:PutObject", "bucket1/file.txt",
+        engine.evaluate(user, "s3:PutObject", "bucket1/file.txt"));
 
     return 0;
 }
