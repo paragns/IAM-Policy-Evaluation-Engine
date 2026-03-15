@@ -1,0 +1,20 @@
+{
+  "username": "demo-user",
+  "policies": [
+    {
+      "name": "S3ReadPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "s3:GetObject",
+          "resource": "bucket1/file.txt"
+        },
+        {
+          "effect": "Deny",
+          "action": "s3:DeleteObject",
+          "resource": "bucket1/file.txt"
+        }
+      ]
+    }
+  ]
+}
