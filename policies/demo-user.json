@@ -7,12 +7,12 @@
         {
           "effect": "Allow",
           "action": "s3:GetObject",
-          "resource": "bucket1/file.txt"
+          "resource": "bucket1/*"
         },
         {
           "effect": "Deny",
           "action": "s3:DeleteObject",
-          "resource": "bucket1/file.txt"
+          "resource": "bucket1/*"
         }
       ]
     }

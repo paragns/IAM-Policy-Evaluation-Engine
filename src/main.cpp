@@ -13,15 +13,22 @@ int main() {
 
     PolicyEngine engine;
 
-    // Should be ALLOW — matches the Allow statement
+    // Wildcard: bucket1/* should match any file inside bucket1/
     printDecision("s3:GetObject", "bucket1/file.txt",
         engine.evaluate(user, "s3:GetObject", "bucket1/file.txt"));
 
-    // Should be DENY — matches the Deny statement
+    printDecision("s3:GetObject", "bucket1/images/photo.jpg",
+        engine.evaluate(user, "s3:GetObject", "bucket1/images/photo.jpg"));
+
+    // Deny also uses wildcard
     printDecision("s3:DeleteObject", "bucket1/file.txt",
         engine.evaluate(user, "s3:DeleteObject", "bucket1/file.txt"));
 
-    // Should be DENY — no matching statement at all (default deny)
+    // Different bucket — should not match bucket1/*
+    printDecision("s3:GetObject", "bucket2/file.txt",
+        engine.evaluate(user, "s3:GetObject", "bucket2/file.txt"));
+
+    // No matching action
     printDecision("s3:PutObject", "bucket1/file.txt",
         engine.evaluate(user, "s3:PutObject", "bucket1/file.txt"));
 
