@@ -1,26 +1,20 @@
-#include "PolicyLoader.h"
+#include "RoleManager.h"
 #include <fstream>
 #include <stdexcept>
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
 
-User PolicyLoader::loadUser(const std::string& filepath) {
+void RoleManager::loadRole(const std::string& filepath) {
     std::ifstream file(filepath);
     if (!file.is_open()) {
-        throw std::runtime_error("Could not open policy file: " + filepath);
+        throw std::runtime_error("Could not open role file: " + filepath);
     }
 
     json data = json::parse(file);
 
-    User user;
-    user.username = data["username"];
-
-    if (data.contains("roles")) {
-        for (const auto& roleName : data["roles"]) {
-            user.roles.push_back(roleName);
-        }
-    }
+    Role role;
+    role.name = data["name"];
 
     for (const auto& policyJson : data["policies"]) {
         Policy policy;
@@ -34,8 +28,16 @@ User PolicyLoader::loadUser(const std::string& filepath) {
             policy.statements.push_back(stmt);
         }
 
-        user.policies.push_back(policy);
+        role.policies.push_back(policy);
     }
 
-    return user;
+    roles[role.name] = role;
+}
+
+const Role* RoleManager::getRole(const std::string& roleName) const {
+    auto it = roles.find(roleName);
+    if (it == roles.end()) {
+        return nullptr;
+    }
+    return &it->second;
 }

@@ -1,14 +1,10 @@
 {
   "username": "demo-user",
+  "roles": ["s3-reader"],
   "policies": [
     {
-      "name": "S3ReadPolicy",
+      "name": "DenyDeletePolicy",
       "statements": [
-        {
-          "effect": "Allow",
-          "action": "s3:GetObject",
-          "resource": "bucket1/*"
-        },
         {
           "effect": "Deny",
           "action": "s3:DeleteObject",

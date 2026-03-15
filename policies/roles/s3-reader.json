@@ -1,0 +1,15 @@
+{
+  "name": "s3-reader",
+  "policies": [
+    {
+      "name": "S3ReadPolicy",
+      "statements": [
+        {
+          "effect": "Allow",
+          "action": "s3:GetObject",
+          "resource": "bucket1/*"
+        }
+      ]
+    }
+  ]
+}

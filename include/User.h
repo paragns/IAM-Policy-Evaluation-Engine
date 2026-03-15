@@ -6,4 +6,5 @@
 struct User {
     std::string username;
     std::vector<Policy> policies;
+    std::vector<std::string> roles;  // role names assigned to this user
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "User.h"
+#include "RoleManager.h"
 
 enum class Decision {
     Allow,
@@ -8,5 +9,9 @@ enum class Decision {
 
 class PolicyEngine {
 public:
+    PolicyEngine(const RoleManager& roleManager);
     Decision evaluate(const User& user, const std::string& action, const std::string& resource);
+
+private:
+    const RoleManager& roleManager;
 };

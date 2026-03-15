@@ -1,14 +1,14 @@
-#include "PolicyLoader.h"
+#include "UserManager.h"
 #include <fstream>
 #include <stdexcept>
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
 
-User PolicyLoader::loadUser(const std::string& filepath) {
+void UserManager::loadUser(const std::string& filepath) {
     std::ifstream file(filepath);
     if (!file.is_open()) {
-        throw std::runtime_error("Could not open policy file: " + filepath);
+        throw std::runtime_error("Could not open user file: " + filepath);
     }
 
     json data = json::parse(file);
@@ -37,5 +37,13 @@ User PolicyLoader::loadUser(const std::string& filepath) {
         user.policies.push_back(policy);
     }
 
-    return user;
+    users[user.username] = user;
+}
+
+const User* UserManager::getUser(const std::string& username) const {
+    auto it = users.find(username);
+    if (it == users.end()) {
+        return nullptr;
+    }
+    return &it->second;
 }

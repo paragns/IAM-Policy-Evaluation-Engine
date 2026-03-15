@@ -1,5 +1,6 @@
 #include <iostream>
-#include "PolicyLoader.h"
+#include "UserManager.h"
+#include "RoleManager.h"
 #include "PolicyEngine.h"
 
 void printDecision(const std::string& action, const std::string& resource, Decision decision) {
@@ -8,29 +9,33 @@ void printDecision(const std::string& action, const std::string& resource, Decis
 }
 
 int main() {
-    PolicyLoader loader;
-    User user = loader.loadUser("policies/demo-user.json");
+    // Phase 1 — register all roles and users
+    RoleManager roleManager;
+    roleManager.loadRole("policies/roles/s3-reader.json");
 
-    PolicyEngine engine;
+    UserManager userManager;
+    userManager.loadUser("policies/demo-user.json");
 
-    // Wildcard: bucket1/* should match any file inside bucket1/
+    PolicyEngine engine(roleManager);
+
+    // Phase 2 — process the query
+    const User* user = userManager.getUser("demo-user");
+    if (!user) {
+        std::cerr << "User not found\n";
+        return 1;
+    }
+
+    // ALLOW — inherited from s3-reader role
     printDecision("s3:GetObject", "bucket1/file.txt",
-        engine.evaluate(user, "s3:GetObject", "bucket1/file.txt"));
+        engine.evaluate(*user, "s3:GetObject", "bucket1/file.txt"));
 
-    printDecision("s3:GetObject", "bucket1/images/photo.jpg",
-        engine.evaluate(user, "s3:GetObject", "bucket1/images/photo.jpg"));
-
-    // Deny also uses wildcard
+    // DENY — explicitly denied in user's own policy
     printDecision("s3:DeleteObject", "bucket1/file.txt",
-        engine.evaluate(user, "s3:DeleteObject", "bucket1/file.txt"));
+        engine.evaluate(*user, "s3:DeleteObject", "bucket1/file.txt"));
 
-    // Different bucket — should not match bucket1/*
-    printDecision("s3:GetObject", "bucket2/file.txt",
-        engine.evaluate(user, "s3:GetObject", "bucket2/file.txt"));
-
-    // No matching action
+    // DENY — no policy covers this action
     printDecision("s3:PutObject", "bucket1/file.txt",
-        engine.evaluate(user, "s3:PutObject", "bucket1/file.txt"));
+        engine.evaluate(*user, "s3:PutObject", "bucket1/file.txt"));
 
     return 0;
 }

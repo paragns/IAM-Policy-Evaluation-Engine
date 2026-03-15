@@ -1,21 +1,39 @@
 #include "PolicyEngine.h"
 #include "ResourceMatcher.h"
 
-Decision PolicyEngine::evaluate(const User& user, const std::string& action, const std::string& resource) {
-    bool allowed = false;
+PolicyEngine::PolicyEngine(const RoleManager& roleManager) : roleManager(roleManager) {}
 
-    for (const auto& policy : user.policies) {
+static bool checkPolicies(const std::vector<Policy>& policies, const std::string& action, const std::string& resource, bool& allowed) {
+    for (const auto& policy : policies) {
         for (const auto& stmt : policy.statements) {
             if (stmt.action == action && resourceMatches(stmt.resource, resource)) {
                 if (stmt.effect == Effect::Deny) {
-                    return Decision::Deny;  // Explicit Deny — stop immediately
+                    return true;  // signal an explicit Deny was found
                 }
                 if (stmt.effect == Effect::Allow) {
-                    allowed = true;         // Mark allowed, but keep checking for Denies
+                    allowed = true;
                 }
             }
         }
     }
+    return false;
+}
 
-    return allowed ? Decision::Allow : Decision::Deny;  // Default Deny if nothing matched
+Decision PolicyEngine::evaluate(const User& user, const std::string& action, const std::string& resource) {
+    bool allowed = false;
+
+    // Check user's own policies
+    if (checkPolicies(user.policies, action, resource, allowed)) {
+        return Decision::Deny;
+    }
+
+    // Check policies inherited from roles
+    for (const auto& roleName : user.roles) {
+        const Role* role = roleManager.getRole(roleName);
+        if (role && checkPolicies(role->policies, action, resource, allowed)) {
+            return Decision::Deny;
+        }
+    }
+
+    return allowed ? Decision::Allow : Decision::Deny;
 }

@@ -11,4 +11,6 @@ add_executable(iam_engine
     src/PolicyLoader.cpp
     src/PolicyEngine.cpp
     src/ResourceMatcher.cpp
+    src/RoleManager.cpp
+    src/UserManager.cpp
 )
